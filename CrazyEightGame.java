@@ -14,7 +14,7 @@ public class CrazyEightGame extends Canvas
     //private static final int CANVAS_SIZE = 500;
     //private static final int CANVAS_MARGIN = 50;
     private static final int NUM_OF_PLAYERS = 2;
-    private static final String CARD_IMAGES_PATH = "/root/mac2010/A7/Cards";
+    private static final String CARD_IMAGES_PATH = "Cards"; //"/root/mac2010/A7/Cards";
     private static final int CARD_WIDTH = 150;
     private static final int CARD_HEIGHT = 150;
     
