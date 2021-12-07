@@ -1,4 +1,4 @@
-
+import java.io.InputStream;
 import java.awt.Color;
 import java.awt.Canvas;
 import java.awt.Graphics;
@@ -49,13 +49,13 @@ public class CrazyEightGame extends Canvas
     private void drawStarterCard(Graphics2D g2d,Card starterCard,int x,int y)
     {
     	String imagePath = CARD_IMAGES_PATH +"/" + starterCard.getCardId() + ".png";
-    	starterCard.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath);    
+    	starterCard.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath,true);    
     }
     
     private void drawDeck(Graphics2D g2d,Card topCard,int x,int y)
     {
-    	String imagePath = CARD_IMAGES_PATH + "/FaceDown.png";
-    	topCard.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath);    
+    	String imagePath = CARD_IMAGES_PATH + "/FaceDownn.png";
+    	topCard.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath,false);    
     }
     
     private void drawCardsOnPlayerHands(int playerId,Graphics2D g2d,int baseX,int baseY,boolean hidden)
@@ -68,7 +68,7 @@ public class CrazyEightGame extends Canvas
 
     	for(Card card : cardsOnPlayerHand)
     	{
-    		String fileName = hidden ? "FaceDown.png" : card.getCardId() + ".png";
+    		String fileName = hidden ? "FaceDownn.png" : card.getCardId() + ".png";
     		String imagePath = CARD_IMAGES_PATH + "/" + fileName;
     	
     		File file = new File(imagePath);
@@ -76,10 +76,10 @@ public class CrazyEightGame extends Canvas
     		System.out.println(imagePath);
     		if(!file.exists())
     		{
-    			imagePath = CARD_IMAGES_PATH + "/FaceDown.png"; 
+    			imagePath = CARD_IMAGES_PATH + "/FaceDownn.png"; 
     		}
     			
-    		card.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath);      			
+    		card.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath,true);      			
     		x+=50;
     		
     	}
