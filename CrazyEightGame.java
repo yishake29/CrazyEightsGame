@@ -17,7 +17,7 @@ public class CrazyEightGame extends Canvas
     private static final String CARD_IMAGES_PATH = "Cards"; //"/root/mac2010/A7/Cards";
     private static final int CARD_WIDTH = 150;
     private static final int CARD_HEIGHT = 150;
-    
+  
     private CrazyEights ce;
     
     public CrazyEightGame() 
@@ -26,7 +26,7 @@ public class CrazyEightGame extends Canvas
         
         ce.getDeck().shuffleDeck();
         ce.initCardsOnPlayersHand();
-        ce.setStarterCard();
+       ce.setStarterCard();
         
         // lastly we set our size
         setSize(600, 600);
@@ -54,7 +54,7 @@ public class CrazyEightGame extends Canvas
     
     private void drawDeck(Graphics2D g2d,Card topCard,int x,int y)
     {
-    	String imagePath = CARD_IMAGES_PATH + "/FaceDown.png";
+    	String imagePath = CARD_IMAGES_PATH + "/FaceDownn.png";
     	topCard.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath);    
     }
     
@@ -68,7 +68,7 @@ public class CrazyEightGame extends Canvas
 
     	for(Card card : cardsOnPlayerHand)
     	{
-    		String fileName = hidden ? "FaceDown.png" : card.getCardId() + ".png";
+    		String fileName = hidden ? "FaceDownn.png" : card.getCardId() + ".png";
     		String imagePath = CARD_IMAGES_PATH + "/" + fileName;
     	
     		File file = new File(imagePath);
@@ -76,7 +76,7 @@ public class CrazyEightGame extends Canvas
     		System.out.println(imagePath);
     		if(!file.exists())
     		{
-    			imagePath = CARD_IMAGES_PATH + "/FaceDown.png"; 
+    			imagePath = CARD_IMAGES_PATH + "/FaceDownn.png"; 
     		}
     			
     		card.draw(g2d, x, y,CARD_WIDTH,CARD_HEIGHT, imagePath);      			

@@ -7,8 +7,16 @@ import javax.swing.ImageIcon;
 
 public class Card 
 { 
-      private Suit suit;
-      private Rank rank;
+      private final Suit suit;
+      private final Rank rank;
+      private Image mshi;
+
+        public Card(Suit suit, Rank rank){
+           this.suit = suit;
+           this.rank = rank;
+           String imgName = "Cards/" + rank.toString() + suit.toString() + ".png";
+           mshi = ImageIO.read(getClass().getResourceAsStream(imgName));
+ }
 
       public void print()
       {
@@ -32,13 +40,13 @@ public class Card
     	  return rank;
       }
       
-      public void setSuit(Suit suit) {
-    	  this.suit = suit;
-      }
+     // public void setSuit(Suit suit) {
+    //	  this.suit = suit;
+     // }
 
-      public void setRank(Rank rank) {
-    	  this.rank = rank;
-      }
+    //  public void setRank(Rank rank) {
+    //	  this.rank = rank;
+     // }
       
       public void draw(Graphics2D g2d,int x,int y,String path)
       {
@@ -49,7 +57,7 @@ public class Card
       
       public void draw(Graphics2D g2d,int x,int y,int w,int h,String path)
       {
-    	  Image mshi = new ImageIcon(path).getImage();
+    	 // Image mshi = new ImageIcon(path).getImage();
     	  
     	  g2d.drawImage(mshi, x, y,w,h,null);
 
