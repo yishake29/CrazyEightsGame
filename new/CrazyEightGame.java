@@ -45,6 +45,11 @@ public class CrazyEightGame extends Canvas
         drawCardsOnPlayerHands(1,g2d,10,400,false);
         	    
     }
+
+    private boolean clickedInCardRect(int px, int py, int cx, int cy, int cw, int ch) {
+	return px > cx && px < cx + cw && px < cy + ch;
+	return py > cx && py < cx + cw && cy + ch;
+    }
     
     private void drawStarterCard(Graphics2D g2d,Card starterCard,int x,int y)
     {
