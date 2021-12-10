@@ -6,18 +6,13 @@ import javax.swing.ImageIcon;
 
 public class Card 
 { 
-	private Suit suit;
-	private Rank rank;
+	private final  Suit suit;
+	private final Rank rank;
 
-
-	public Card() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public Card(Suit suit, Rank rank) 
 	{
-		super();
+	        
 		this.suit = suit;
 		this.rank = rank;
 	}
@@ -44,13 +39,7 @@ public class Card
 		return rank;
 	}
 
-	public void setSuit(Suit suit) {
-		this.suit = suit;
-	}
-
-	public void setRank(Rank rank) {
-		this.rank = rank;
-	}
+    
 
 	public void draw(Graphics2D g2d,int x,int y,String path)
 	{

@@ -22,10 +22,7 @@ public class Deck
          for(int s=0;s< suitArr.length;s++)
          {
 
-            Card c= new Card();
-
-            c.setRank(rankArr[r]);
-            c.setSuit(suitArr[s]);
+            Card c= new Card(suitArr[s],rankArr[r]);
 
             cards.add(c);
        

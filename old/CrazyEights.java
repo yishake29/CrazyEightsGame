@@ -192,7 +192,7 @@ public class CrazyEights
    {
 	   
 	   int selSuit = -1;
-	   Card newStarterCard = new Card();
+	   Card newStarterCard = null; //new Card();
 	   Suit selectedSuit;
 	   
 	   System.out.println("Please choose a Suit for the new Starter Card");
@@ -220,8 +220,9 @@ public class CrazyEights
 				   if(c.getSuit() == suitArr[i])
 				   {
 					   selectedSuit = suitArr[i];
-					   newStarterCard.setRank(Rank.R8);
-					   newStarterCard.setSuit(selectedSuit);
+                                           newStarterCard = new Card(selectedSuit, Rank.R8);
+					   //newStarterCard.setRank(Rank.R8);
+					   //newStarterCard.setSuit(selectedSuit);
 					   
 					   System.out.println("Computer selected " + selectedSuit);
 				   }
@@ -243,9 +244,9 @@ public class CrazyEights
 				   selSuit = Integer.valueOf(getInput());
 			   }   
 		   }
-		   
-		   newStarterCard.setRank(Rank.R8);
-		   newStarterCard.setSuit(selectedSuit);
+		   newStarterCard = new Card(selectedSuit, Rank.R8);
+		   //newStarterCard.setRank(Rank.R8);
+		   //newStarterCard.setSuit(selectedSuit);
 		   
 	   }
 	      
