@@ -3,6 +3,7 @@
 public class Player
 {
    private int playerId;
+
    private HandOfCards playerHand;
    
    public Player(int playerId) 
