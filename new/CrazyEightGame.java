@@ -6,7 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.util.List;
-
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 
 public class CrazyEightGame extends Canvas
@@ -17,7 +18,7 @@ public class CrazyEightGame extends Canvas
     private static final String CARD_IMAGES_PATH = "Cards"; //"/root/mac2010/A7/Cards";
     private static final int CARD_WIDTH = 150;
     private static final int CARD_HEIGHT = 150;
-    
+  
     private CrazyEights ce;
     
     public CrazyEightGame() 
@@ -26,11 +27,13 @@ public class CrazyEightGame extends Canvas
         
         ce.getDeck().shuffleDeck();
         ce.initCardsOnPlayersHand();
-        ce.setStarterCard();
+       ce.setStarterCard();
         
         // lastly we set our size
         setSize(600, 600);
         setBackground(Color.BLUE);
+
+        addMouseListener(new MouseEventDemo());
     }
 
     public void paint(Graphics g) 
@@ -85,5 +88,35 @@ public class CrazyEightGame extends Canvas
     	}
     }
 	
+    public class MouseEventDemo  implements MouseListener {
+
+        public void mousePressed(MouseEvent e) {
+            saySomething("Mouse pressed; # of clicks: "
+                    + e.getClickCount(), e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            saySomething("Mouse released; # of clicks: "
+                    + e.getClickCount(), e);
+        }
+
+        public void mouseEntered(MouseEvent e) {
+            saySomething("Mouse entered", e);
+        }
+
+        public void mouseExited(MouseEvent e) {
+            saySomething("Mouse exited", e);
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            saySomething("Mouse clicked (# of clicks: "
+                    + e.getClickCount() + ")", e);
+        }
+
+        void saySomething(String eventDescription, MouseEvent e) {
+            System.out.println(eventDescription + " detected on "
+                    + e.getComponent().getClass().getName());
+        }
+    }
 }
 
