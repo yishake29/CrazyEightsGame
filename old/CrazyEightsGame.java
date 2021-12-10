@@ -1,9 +1,7 @@
 
 
-public class CrazyEightsGame
-{
-   public static void main(String[] args)
-   {
+public class CrazyEightsGame {
+   public static void main(String[] args) {
 	   
       int numPlayers = 2;
       
@@ -16,16 +14,14 @@ public class CrazyEightsGame
       String userSelection= ce.getInput();
 
           
-      if(userSelection.equals("1") )
-      {
+      if(userSelection.equals("1") ) {
     	 ce.getDeck().shuffleDeck();
          ce.initCardsOnPlayersHand();
          ce.setStarterCard();
 
          System.out.println("*************** Game is started ***************");
 
-         do 
-         {
+         do {
         	System.out.println("Deck Size ::" + ce.getDeck().deckSize()); 
        
             ce.nextMove(ce.getWhoseTurnIsIt());
@@ -67,7 +63,6 @@ public class CrazyEightsGame
       
       
    }
-   
    
 }
 
