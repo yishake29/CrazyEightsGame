@@ -49,9 +49,40 @@ public class CrazyEightGame extends Canvas
         	    
     }
 
-    private boolean clickedInCardRect(int px, int py, int cx, int cy, int cw, int ch) {
-	return px > cx && px < cx + cw && px < cy + ch;
-	return py > cx && py < cx + cw && cy + ch;
+    private boolean clickedOnCard(int px, int py, int cx, int cy, int cw, int ch) {
+	return px > cx && px < cx + cw && py > cy && py < cy + ch;
+    }
+
+    private int clickedOnCPH(int playerId, int pointX, int pointY, int baseX, int baseY)
+    {
+    	List<Card> cardsOnPlayerHand = 
+    			ce.getPlayers().get(playerId).getPlayerHand().getCardsOnPlayersHands();
+
+    	int x = baseX;
+    	int y = baseY;
+
+    	for(int i = cardsOnPlayerHand.size() - 1; i < 0; i--)
+    	{
+    		if (clickedOnCard(pointX, pointY, x, y, CARD_WIDTH, CARD_HEIGHT)) {
+			return i;
+		}      			
+    		x+=50;	
+    	}
+	return -1;
+    }
+
+    private boolean clickedOnDeck(int pointX, int pointY, int x, int y)
+    {
+	if (clickedOnCard(pointX, pointY, x, y, CARD_WIDTH, CARD_HEIGHT)) {
+		return true;
+	} else {
+		return false;
+	}
+    }
+
+    private void handleClick(int x, int y) {
+	System.out.println("Clicked on deck: " + clickedOnDeck(x, y, 50, 200));
+	System.out.println("Clicked on player card: " + clickedOnCPH(1, x, y, 10, 400));
     }
     
     private void drawStarterCard(Graphics2D g2d,Card starterCard,int x,int y)
@@ -116,6 +147,7 @@ public class CrazyEightGame extends Canvas
         public void mouseClicked(MouseEvent e) {
             saySomething("Mouse clicked (# of clicks: "
                     + e.getClickCount() + ")", e);
+	    handleClick(e.getX(), e.getY());
         }
 
         void saySomething(String eventDescription, MouseEvent e) {
