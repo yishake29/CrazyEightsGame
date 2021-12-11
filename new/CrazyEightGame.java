@@ -60,7 +60,7 @@ public class CrazyEightGame extends Canvas {
     }
 
     private boolean clickedOnCard(int px, int py, int cx, int cy, int cw, int ch) {
-        return px > cx && px < cx + cw && py > cy && py < cy + ch;
+        return px > cx+25 && px < cx + cw-25 && py > cy && py < cy + ch;
     }
 
     private int clickedOnCPH(int playerId, int pointX, int pointY, int baseX, int baseY)
@@ -68,15 +68,17 @@ public class CrazyEightGame extends Canvas {
         List<Card> cardsOnPlayerHand = 
             ce.getPlayers().get(playerId).getPlayerHand().getCardsOnPlayersHands();
 
-        int x = baseX;
+        int x = baseX + (cardsOnPlayerHand.size()-1)*50;
         int y = baseY;
 
-        for(int i = cardsOnPlayerHand.size() - 1; i < 0; i--)
+        for(int i = cardsOnPlayerHand.size() - 1; i >= 0; i--)
+        
         {
-            if (clickedOnCard(pointX, pointY, x, y, CARD_WIDTH, CARD_HEIGHT)) {
+        System.out.printf("%d %d %d %d \n",pointX,pointY,x,y);  
+       if (clickedOnCard(pointX, pointY, x, y, CARD_WIDTH, CARD_HEIGHT)) {
                 return i;
             }      			
-            x+=50;	
+            x-=50;	
         }
         return -1;
     }
@@ -158,6 +160,7 @@ public class CrazyEightGame extends Canvas {
             saySomething("Mouse clicked (# of clicks: "
                     + e.getClickCount() + ")", e);
             handleClick(e.getX(), e.getY());
+            System.out.println(e.getX() + " " + (e.getY()));
         }
 
         void saySomething(String eventDescription, MouseEvent e) {

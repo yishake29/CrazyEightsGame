@@ -15,7 +15,8 @@ public class Card
     static{
        try{
         back = ImageIO.read(Card.class.getResourceAsStream("Cards/FaceDownn.png"));
-        }catch (IOException iioe) {
+             // System.out.println(back.getWidth(null)+ " " +back.getHeight(null));       
+ }catch (IOException iioe) {
             System.out.println(iioe);
         }   
     }   
