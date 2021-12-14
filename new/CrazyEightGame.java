@@ -10,52 +10,77 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
+import java.awt.*;
 
 public class CrazyEightGame extends Canvas {
-    //private static final int CANVAS_SIZE = 500;
-    //private static final int CANVAS_MARGIN = 50;
-    private static final int NUM_OF_PLAYERS = 2;
     private static final String CARD_IMAGES_PATH = "Cards"; //"/root/mac2010/A7/Cards";
-    private static final int CARD_WIDTH = 150;
-    private static final int CARD_HEIGHT = 150;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    private static final int NUM_OF_PLAYERS = 2;
+    
+    private static final int CARD_WIDTH = 150; 
+    private static final int CARD_HEIGHT = 150; 
+    
+    private static final int DECK_POS_X = 10;
+    private static final int DECK_POS_Y = 200;	
+    
+    private static final int STARTER_CARD_POS_X = 200;
+    private static final int STARTER_CARD_POS_Y = 200;	
+    
+    private static final int PLAYER1_POS_X = 10;
+    private static final int PLAYER1_POS_Y = 10;
+    
+    private static final int PLAYER2_POS_X = 10;
+    private static final int PLAYER2_POS_Y = 400;
+    
 
-    boolean wasClicked;
+   private boolean cardPickedUpFromDeck = false;
 
     private CrazyEights ce;
 
-  //  public CrazyEights(int initX, int initY) {
-        // initialize the state
-    //    x = initX;
-      //  y = initY;
-
-       // return Card;
-   // }
-
     public CrazyEightGame() 
-    {        	
-        ce = new CrazyEights(NUM_OF_PLAYERS);
-
-        ce.getDeck().shuffleDeck();
-        ce.initCardsOnPlayersHand();
-        ce.setStarterCard();
-
-        // lastly we set our size
+    {        
+    	initNewGame();
+    	
         setSize(600, 600);
         setBackground(Color.BLUE);
-
-        addMouseListener(new MouseEventDemo());
+        
+        addMouseListener(new MouseEventListener());
+              
     }
-
+private void initNewGame()
+    {
+    	 repaint();
+    	 
+    	 ce = new CrazyEights(NUM_OF_PLAYERS);
+         
+         ce.getDeck().shuffleDeck();
+         ce.initCardsOnPlayersHand();
+         ce.setStarterCard();
+              
+         ce.getPlayers().get(0).setPlayerMachine(true);
+        
+         System.out.println("*************** Game is started ***************");
+         
+         OptionPanelHelper.showMessageDialog("*************** Game is started ***************");
+         
+    }
     public void paint(Graphics g) 
     {
+        
         Graphics2D g2d = (Graphics2D) g;
+        
+        drawCardsOnPlayerHands(0,g2d,PLAYER1_POS_X,PLAYER1_POS_Y,true);
+        
+        drawDeck(g2d,ce.getDeck().getTopCard(),DECK_POS_X,DECK_POS_Y);
+        
+        drawStarterCard(g2d,ce.getStarterCard(),STARTER_CARD_POS_X,STARTER_CARD_POS_Y);    
+        
+        drawCardsOnPlayerHands(1,g2d,PLAYER2_POS_X,PLAYER2_POS_Y,true);
 
-        drawCardsOnPlayerHands(0,g2d,10,10,true);
-
-        drawDeck(g2d,ce.getDeck().getTopCard(),50,200);
-        drawStarterCard(g2d,ce.getStarterCard(),250,200);
-
-        drawCardsOnPlayerHands(1,g2d,10,400,false);
 
     }
 
@@ -66,8 +91,7 @@ public class CrazyEightGame extends Canvas {
     private int clickedOnCPH(int playerId, int pointX, int pointY, int baseX, int baseY)
     {
         List<Card> cardsOnPlayerHand = 
-            ce.getPlayers().get(playerId).getPlayerHand().getCardsOnPlayersHands();
-
+    			ce.getPlayers().get(playerId).getPlayerHand().getCardsOnPlayersHandsAsList();
         int x = baseX + (cardsOnPlayerHand.size()-1)*50;
         int y = baseY;
 
@@ -91,12 +115,192 @@ public class CrazyEightGame extends Canvas {
             return false;
         }
     }
-
-    private void handleClick(int x, int y) {
-        System.out.println("Clicked on deck: " + clickedOnDeck(x, y, 50, 200));
-        System.out.println("Clicked on player card: " + clickedOnCPH(1, x, y, 10, 400));
+ private Player getCurrentPlayer()
+    {
+    	return ce.getPlayers().get(ce.getWhoseTurnIsIt());	
     }
+    
+    private void handleClick(int x, int y) 
+    {      	
+    	boolean deckClicked = false;	
 
+    	deckClicked = clickedOnDeck(x, y, DECK_POS_X, DECK_POS_Y);
+
+    	if(deckClicked)
+    	{
+    		handleDeckClick();	
+    	}
+    	else 
+    	{
+    		int cardIndex = clickedOnCPH(1, x, y, PLAYER2_POS_X, PLAYER2_POS_Y); 
+
+    		if(cardIndex != -1)
+    		{
+    			
+    			//OptionPanelHelper.showMessageDialog(getCurrentPlayer().getPlayerHand().getCardsOnPlayersHandsAsList().get(cardIndex).toString());
+    			
+    			if(!getCurrentPlayer().isPlayerMachine())
+    			   playCard(cardIndex+1);
+    		}
+    	}
+    }
+  private void handleDeckClick()
+    {
+    	System.out.println("Deck is clicked !!");   
+    	
+    	if (!cardPickedUpFromDeck) 
+    	{
+    		System.out.println(ce.getWhoseTurnIsIt());
+        	
+    		Card cardFromDeck = getCardFromDeck();
+            
+    		System.out.println("cardFromDeck:" + cardFromDeck);
+    		
+        	repaint();   		
+    	}
+    	
+    }
+ private Card getCardFromDeck()
+    {
+    	Player currPlayer = getCurrentPlayer();
+	 	Card   topCard = ce.getDeck().getTopCard();
+	 	
+    	currPlayer.getPlayerHand().addCard(topCard);
+    	ce.getDeck().removeTopCard();
+    	
+    	cardPickedUpFromDeck = true;
+    	
+    	return topCard;
+    	
+    }
+    private void checkGameStatus()
+    {
+    	if (ce.gameOver())
+    	{
+    		OptionPanelHelper.showMessageDialog("*************** Game Over !!! ***************");
+
+    		Player gameWonBy = ce.whoWonTheGame();
+
+    		if (gameWonBy != null) {
+    			if (!gameWonBy.isPlayerMachine()) 
+    	
+	OptionPanelHelper.showMessageDialog("You" + (gameWonBy.getPlayerId()+1) + " won the game !!");
+    			else
+    				OptionPanelHelper.showMessageDialog("Computer won the game !!");
+    		}
+    		else {
+    			OptionPanelHelper.showMessageDialog("There is no winner !!");
+    		}
+    		
+    		boolean yes = OptionPanelHelper.showConfirmDialog("New Game ?");
+    		
+    		if(yes)
+    			initNewGame();
+    		else
+    		    System.exit(0);
+    		
+    	}          
+    }
+    
+    private void playCard(int selectedIndex)
+    {
+    	
+    	//OptionPanelHelper.showMessageDialog(ce.getStarterCard().toString());
+    	
+    	Player player = getCurrentPlayer();
+    	
+    	if(player.isPlayerMachine())
+    	{
+    		//OptionPanelHelper.showMessageDialog("Computer is playing ...");
+    		
+    		int selectedCard = ce.pickACard(player);
+    		
+    		if(selectedCard != -1)
+    		   nextMove(player,ce.pickACard(player));
+    		else
+    		{
+    			OptionPanelHelper.showMessageDialog("Computer will take a card from deck");
+    			
+    			getCardFromDeck();
+    			
+    			repaint();
+    			
+    			/*try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				*/
+    			
+    			nextMove(player,player.getPlayerHand().numCardsInHand());
+    			
+    		}
+    	}
+    	else 
+    	{
+    		//OptionPanelHelper.showMessageDialog("Index:" + selectedIndex);
+    		nextMove(player,selectedIndex);	
+    	}
+    	
+    }
+    
+    private void nextMove(Player player,int selectedCard)
+    {	
+    	Card c = player.getPlayerHand().playCard(selectedCard, ce.getStarterCard());
+    	Card starterCard = c;
+    	
+    	if(c != null)
+    	{
+    		// OptionPanelHelper.showMessageDialog("Correct Card  " + c);
+    		if (c.getRank() == Rank.R8) // if selected card is 8, will let the player change the next starter card
+    		{
+    			starterCard = ce.changeStarterCard(player);
+    			OptionPanelHelper.showMessageDialog("New Starter Card :" + starterCard);
+    		}
+   
+    		ce.advanceTurn();
+    		ce.setStarterCard(starterCard);
+    		cardPickedUpFromDeck = false;
+             
+    		repaint();
+    		
+    		checkGameStatus();
+    		
+    		if(getCurrentPlayer().isPlayerMachine())
+				playCard(-1);
+    		
+    	}
+    	else {
+           
+    		if(!cardPickedUpFromDeck)
+    			OptionPanelHelper.showMessageDialog("Incorrect Card. You can take a card from deck");
+    		else
+    		{
+    			if(!player.isPlayerMachine())
+    			{
+    				boolean skip = OptionPanelHelper.showConfirmDialog("Incorrect Card. Skip ?");
+
+    				if(skip)
+    				{
+    					ce.advanceTurn();
+    					cardPickedUpFromDeck = false;
+
+    					if(getCurrentPlayer().isPlayerMachine())
+    						playCard(-1);
+    				}
+    			}
+    			else 
+    			{   
+					ce.advanceTurn();
+					cardPickedUpFromDeck = false;
+
+    			}
+      			
+    		}    				
+    	}
+    	
+    }
     private void drawStarterCard(Graphics2D g2d,Card starterCard,int x,int y)
     {
         String imagePath = CARD_IMAGES_PATH +"/" + starterCard.getCardId() + ".png";
@@ -112,8 +316,8 @@ public class CrazyEightGame extends Canvas {
     private void drawCardsOnPlayerHands(int playerId,Graphics2D g2d,int baseX,int baseY,boolean hidden)
     {
         List<Card> cardsOnPlayerHand = 
-            ce.getPlayers().get(playerId).getPlayerHand().getCardsOnPlayersHands();
-
+    			ce.getPlayers().get(playerId).getPlayerHand().
+    			getCardsOnPlayersHandsAsList();
         int x = baseX;
         int y = baseY;
 
@@ -136,55 +340,47 @@ public class CrazyEightGame extends Canvas {
         }
     }
 
-    public class MouseEventDemo  implements MouseListener {
 
+ private class MouseEventListener  implements MouseListener 
+    {
         public void mousePressed(MouseEvent e) {
-            saySomething("Mouse pressed; # of clicks: "
-                    + e.getClickCount(), e);
+        
+            println("Mouse pressed; # of clicks: "
+                    + e.getClickCount(), e); 
         }
 
         public void mouseReleased(MouseEvent e) {
-            saySomething("Mouse released; # of clicks: "
+        	println("Mouse released; # of clicks: "
                     + e.getClickCount(), e);
         }
 
         public void mouseEntered(MouseEvent e) {
-            saySomething("Mouse entered", e);
+        	println("Mouse entered", e);
         }
 
         public void mouseExited(MouseEvent e) {
-            saySomething("Mouse exited", e);
+        	println("Mouse exited", e);
         }
 
         public void mouseClicked(MouseEvent e) {
-            saySomething("Mouse clicked (# of clicks: "
-                    + e.getClickCount() + ")", e);
-            handleClick(e.getX(), e.getY());
-            System.out.println(e.getX() + " " + (e.getY()));
+            
+        	println("Mouse clicked (# of clicks: "
+                 + e.getClickCount() + ")", e);
+            System.out.println("Clicked on " + e.getX() +  ":" + e.getY());
+        
+        	handleClick(e.getX(), e.getY());
         }
 
-        void saySomething(String eventDescription, MouseEvent e) {
+        void println(String eventDescription, MouseEvent e) 
+        {
             System.out.println(eventDescription + " detected on "
                     + e.getComponent().getClass().getName());
         }
     }
-  //  public  boolean isClicked(int clickX, int clickY) {
-        //  System.out.println("Checking " + clickX + "," + clickY + " against " + x + "," + y);
-    //    return clickX >= x 
-      //      && clickY >= y;
-        //        && clickX < x + mickeyImg.getWidth(null)
-        //      && clickY < y + mickeyImg.getHeight(null);
-   // }
-
-    class CrazyEightAdapter extends MouseAdapter {
-        public void mouseClicked(MouseEvent e) {
-            int clickX = e.getX();
-            int clickY = e.getY();
-            // instances of inner classes can refer to the instance of the class
-            // they are defined within.
-         //   wasClicked = wasClicked || isClicked(clickX, clickY);
-            //  System.out.println(wasHit ? "Ouch! You got me." : "Hah! Missed me!");
-        }
-    }
+    	
 }
+
+
+
+
 
